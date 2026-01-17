@@ -1,3 +1,4 @@
+#Libralis
 import shutil
 import pathlib
 from pathlib import Path
@@ -5,61 +6,65 @@ import sys
 from PySide6.QtWidgets import QApplication, QPushButton, QLabel,QFileDialog
 from PySide6.QtCore import Slot
 from PySide6 import QtCore, QtWidgets, QtGui
-# Greetings
 
-class myApp(QtWidgets.QWidget):
-
-
-    
+#Main class
+class App(QtWidgets.QWidget):
+    #Layout
     def __init__(self):
         super().__init__()
-        self.button = QtWidgets.QPushButton("Choose directory")
-        self.button2 = QtWidgets.QPushButton("Copy")
-        self.text = QtWidgets.QLabel("Hello World",
+        #none direction
+        self.direction = ""
+        #Ui components
+        self.direction_button = QtWidgets.QPushButton("Choose directory")
+        self.copy_button = QtWidgets.QPushButton("Copy")
+        self.label = QtWidgets.QLabel("choose direction",
                                      alignment=QtCore.Qt.AlignCenter)
-
+        #creating layout
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.layout.addWidget(self.button)
-        
-        self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button2)
+        #adding widgets to layout
+        self.layout.addWidget(self.direction_button)
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.copy_button)
+        #button clicked
+        self.direction_button.clicked.connect(self.get_direction)
+        self.copy_button.clicked.connect(self.cloning)
 
-        self.button.clicked.connect(self.Testo)
-        self.button2.clicked.connect(self.test)
-
-
+    #geting copy direction
     @QtCore.Slot()
-    def Testo(self):
-        self.fileName = QtWidgets.QFileDialog.getExistingDirectory(
+    def get_direction(self):
+        self.direction = QtWidgets.QFileDialog.getExistingDirectory(
             self,
-            "coś"
+            "choose folder for copy"
         )
         
         
-
+    #cloning files
     @QtCore.Slot()
-    def test(self):
+    def cloning(self):
     
         home_dir = Path.home()
+        destination = self.direction
         
-        test = pathlib.Path("/usr/share/plasma/desktoptheme/")
-        dest = self.fileName
-        test2 = pathlib.Path(f"{home_dir}/.local/share/plasma/look-and-feel/")
+        desktoptheme = pathlib.Path("/usr/share/plasma/desktoptheme/")
+        look_and_feel = pathlib.Path(f"{home_dir}/.local/share/plasma/look-and-feel/")
 
-        shutil.copytree(test, dest, dirs_exist_ok=True)
-        shutil.copytree(test2, dest, dirs_exist_ok=True)
+        if (destination == ""):
+            self.text.setText("Please choose a folder")
 
-        self.text.setText("zrobione ez?")
-
-
-
-
+        shutil.copytree(desktoptheme, destination, dirs_exist_ok=True)
+        shutil.copytree(look_and_feel, destination, dirs_exist_ok=True)
+        
+        self.text.setText("Done")
 
 
+
+
+
+#starting app
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    widget = myApp()
+    widget = App()
     widget.resize(800, 600)
     widget.show()
 
