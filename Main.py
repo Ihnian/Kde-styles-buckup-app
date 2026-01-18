@@ -10,6 +10,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 #Main class
 class App(QtWidgets.QWidget):
     #Layout
+    #github bug
     def __init__(self):
         super().__init__()
         #none direction
