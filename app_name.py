@@ -19,6 +19,7 @@ class App(QtWidgets.QWidget, QtCore.QThread):
         self.thread = QtCore.QThread()
         #Initialization UI
         self.UI()
+        self.styles()
     
     #Layout
     def UI(self):
@@ -31,18 +32,25 @@ class App(QtWidgets.QWidget, QtCore.QThread):
         #creating layout
         self.layout = QtWidgets.QVBoxLayout(self)
         #adding widgets to layout
-        self.layout.addWidget(self.direction_button)
         self.layout.addWidget(self.label)
-        self.layout.addWidget(self.copy_button)
         self.layout.addWidget(self.progressbar)
+        self.layout.addWidget(self.direction_button)
+        self.layout.addWidget(self.copy_button)
         #button clicked
         if not self.thread.isRunning():
             self.copy_button.clicked.connect(self.Clone_thread)
         self.direction_button.clicked.connect(self.get_direction)
-
+        
+    def styles(self):
+        self.copy_button.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;}""")
+        
     #Runing and starting cloning thread
     @QtCore.Slot()
     def Clone_thread(self):
+        self.label.setText("Coping..")
         self.thread.run = self.cloning
         self.thread.start()
         
@@ -114,15 +122,12 @@ class App(QtWidgets.QWidget, QtCore.QThread):
         self.finished.emit()
 
 
-
-
-
 #starting app
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = App()
-    widget.resize(800, 600)
+    widget.resize(300, 200)
     widget.show()
 
     sys.exit(app.exec())
